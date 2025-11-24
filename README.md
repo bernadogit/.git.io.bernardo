@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desemprego & Fome: Conexão Direta</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #10b981;
+            --accent: #f59e0b;
+            --danger: #ef4444;
+            --dark: #0f172a;
+            --darker: #020617;
+            --light: #f8fafc;
+            --text: #e2e8f0;
+            --text-light: #94a3b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--darker);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Fundo com elementos temáticos flutuantes */
+        .floating-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .floating-element {
+            position: absolute;
+            opacity: 0.1;
+            animation: float 20s infinite linear;
+        }
+
+        .element-1 { top: 10%; left: 5%; animation-delay: 0s; animation-duration: 25s; }
+        .element-2 { top: 70%; left: 80%; animation-delay: 2s; animation-duration: 30s; }
+        .element-3 { top: 40%; left: 90%; animation-delay: 5s; animation-duration: 20s; }
+        .element-4 { top: 80%; left: 10%; animation-delay: 7s; animation-duration: 35s; }
+        .element-5 { top: 20%; left: 70%; animation-delay: 10s; animation-duration: 28s; }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(20px, 30px) rotate(5deg); }
+            50% { transform: translate(40px, 10px) rotate(0deg); }
+            75% { transform: translate(20px, -20px) rotate(-5deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+
+        /* Partículas animadas */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(99, 102, 241, 0.3);
+            border-radius: 50%;
+            animation: particle-float 15s infinite linear;
+        }
+
+        @keyframes particle-float {
+            0% { transform: translateY(0) translateX(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
+        }
+
+        header {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(2, 6, 23, 0.8) 100%);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 4rem 1rem;
+            text-align: center;
+            position: relative;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
+
+        header p {
+            font-size: 1.3rem;
+            color: var(--text-light);
+            margin-bottom: 2rem;
+        }
+
+        nav {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            padding: 1rem;
+            flex-wrap: wrap;
+        }
+
+        nav li {
+            margin: 0 1rem;
+        }
+
+        nav a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.7rem 1.5rem;
+            border-radius: 50px;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+        }
+
+        nav a:hover {
+            background: rgba(99, 102, 241, 0.1);
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        nav a.active {
+            background: rgba(99, 102, 241, 0.2);
+            border-color: var(--primary);
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        section {
+            padding: 5rem 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+
+        /* Cards flutuantes */
+        .floating-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .floating-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2.5rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .floating-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        .floating-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--light);
+        }
+
+        .card-content {
+            color: var(--text-light);
+            line-height: 1.7;
+        }
+
+        /* Estatísticas com animação */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .stat-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        /* Gráficos modernos */
+        .charts-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .chart-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .chart-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        .chart-title {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: var(--light);
+        }
+
+        .chart-bar-container {
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .chart-bar {
+            height: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .chart-fill {
+            height: 100%;
+            border-radius: 12px;
+            transition: width 1.5s ease-in-out;
+            width: 0;
+        }
+
+        .chart-explanation {
+            background: rgba(99, 102, 241, 0.1);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-top: 1.5rem;
+            border-left: 4px solid var(--primary);
+        }
+
+        /* Botão de ação */
+        .cta-section {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(2, 6, 23, 0.9) 100%);
+            border-radius: 20px;
+            margin: 4rem 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .cta-title {
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .cta-text {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .botao {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 15px 35px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .botao:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(99, 102, 241, 0.4);
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(2, 6, 23, 0.9);
+            color: white;
+            padding: 4rem 1rem 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1.5rem;
+            color: var(--light);
+            font-size: 1.3rem;
+        }
+
+        .footer-section p {
+            color: var(--text-light);
+            line-height: 1.7;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-light);
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2.5rem;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            nav li {
+                margin: 0.5rem 0;
+            }
+            
+            section {
+                padding: 3rem 1rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .floating-cards, .stats-grid, .charts-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animações de entrada */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.8s ease forwards;
+        }
+    </style>
+</head>
+<body>
+    <!-- Fundo com elementos flutuantes -->
+    <div class="floating-background">
+        <div class="floating-element element-1">📈</div>
+        <div class="floating-element element-2">🍽️</div>
+        <div class="floating-element element-3">💼</div>
+        <div class="floating-element element-4">📊</div>
+        <div class="floating-element element-5">🌍</div>
+    </div>
+
+    <!-- Partículas animadas -->
+    <div class="particles" id="particles-container"></div>
+
+    <header>
+        <div class="header-content">
+            <h1>Desemprego & Fome</h1>
+            <p>Uma análise profunda da relação direta entre falta de emprego e insegurança alimentar</p>
+        </div>
+    </header>
+    
+    <nav>
+        <ul>
+            <li><a href="#relacao" class="active">Relação</a></li>
+            <li><a href="#impacto">Impacto</a></li>
+            <li><a href="#estatisticas">Estatísticas</a></li>
+            <li><a href="#solucoes">Soluções</a></li>
+            <li><a href="#acao">Ação</a></li>
+        </ul>
+    </nav>
+    
+    <section id="relacao" class="fade-in">
+        <h2 class="section-title">A Conexão Direta</h2>
+        <div class="floating-cards">
+            <div class="floating-card">
+                <div class="card-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3 class="card-title">Ciclo Vicioso</h3>
+                <p class="card-content">O desemprego gera perda de renda, que por sua vez limita o acesso a alimentos nutritivos. A fome prejudica a saúde e a capacidade de trabalhar, dificultando a recolocação no mercado.</p>
+            </div>
+            
+            <div class="floating-card">
+                <div class="card-icon">
+                    <i class="fas fa-user-friends"></i>
+                </div>
+                <h3 class="card-title">Impacto Familiar</h3>
+                <p class="card-content">Famílias inteiras são afetadas quando o provedor principal perde o emprego. Crianças e idosos são os mais vulneráveis às consequências da insegurança alimentar.</p>
+            </div>
+            
+            <div class="floating-card">
+                <div class="card-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h3 class="card-title">Saúde Mental</h3>
+                <p class="card-content">O estresse financeiro combinado com a preocupação com alimentação adequada gera ansiedade, depressão e outros problemas de saúde mental.</p>
+            </div>
+        </div>
+    </section>
+    
+    <section id="impacto" class="fade-in">
+        <h2 class="section-title">Impacto Global</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">33%</div>
+                <div class="stat-label">Famílias com desempregados enfrentam insegurança alimentar no Brasil</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-number">820M</div>
+                <div class="stat-label">Pessoas passam fome no mundo</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-number">3x</div>
+                <div class="stat-label">Maior probabilidade de insegurança alimentar entre desempregados</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-number">55%</div>
+                <div class="stat-label">Dos desempregados relatam dificuldades para alimentar a família</div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="estatisticas" class="fade-in">
+        <h2 class="section-title">Dados e Gráficos</h2>
+        <div class="charts-container">
+            <div class="chart-card">
+                <h3 class="chart-title">Desemprego vs Insegurança Alimentar</h3>
+                <div class="chart-bar-container">
+                    <div class="chart-label">
+                        <span>Alto desemprego</span>
+                        <span>85%</span>
+                    </div>
+                    <div class="chart-bar">
+                        <div class="chart-fill" style="background: linear-gradient(90deg, var(--primary), var(--secondary));" data-width="85"></div>
+                    </div>
+                </div>
+                
+                <div class="chart-bar-container">
+                    <div class="chart-label">
+                        <span>Desemprego moderado</span>
+                        <span>60%</span>
+                    </div>
+                    <div class="chart-bar">
+                        <div class="chart-fill" style="background: linear-gradient(90deg, var(--primary), var(--accent));" data-width="60"></div>
+                    </div>
+                </div>
+                
+                <div class="chart-bar-container">
+                    <div class="chart-label">
+                        <span>Baixo desemprego</span>
+                        <span>45%</span>
+                    </div>
+                    <div class="chart-bar">
+                        <div class="chart-fill" style="background: linear-gradient(90deg, var(--accent), var(--secondary));" data-width="45"></div>
+                    </div>
+                </div>
+                
+                <div class="chart-bar-container">
+                    <div class="chart-label">
+                        <span>Desemprego mínimo</span>
+                        <span>25%</span>
+                    </div>
+                    <div class="chart-bar">
+                        <div class="chart-fill" style="background: linear-gradient(90deg, var(--secondary), #10b981);" data-width="25"></div>
+                    </div>
+                </div>
+                
+                <div class="chart-explanation">
+                    <p><strong>Análise:</strong> Regiões com maiores taxas de desemprego apresentam proporcionalmente maiores índices de insegurança alimentar, demonstrando a correlação direta entre os dois problemas.</p>
+                </div>
+            </div>
+            
+            <div class="chart-card">
+                <h3 class="chart-title">Qualidade da Alimentação</h3>
+                <div class="chart-bar-container">
+                    <div class="chart-label">
+                        <span>Redução drástica</span>
+                        <span>90%</span>
+                    </div>
+                    <div class="chart-bar">
+                        <div class="chart-fill" style="background: linear-gradient(90deg, var(--danger), #ef4444);" data-width="90"></div>
+                    </div>
+                </div>
+                
+                <div class="chart-bar-container">
+                    <div class="chart-label">
+                        <span>Redução significativa</span>
+                        <span>75%</span>
+                    </div>
+                    <div class="chart-bar">
+                        <div class="chart-fill" style="background: linear-gradient(90deg, var(--danger), var(--accent));" data-width="75"></div>
+                    </div>
+                </div>
+                
+                <div class="chart-bar-container">
+                    <div class="chart-label">
+                        <span>Redução moderada</span>
+                        <span>50%</span>
+                    </div>
+                    <div class="chart-bar">
+                        <div class="chart-fill" style="background: linear-gradient(90deg, var(--accent), #f59e0b);" data-width="50"></div>
+                    </div>
+                </div>
+                
+                <div class="chart-bar-container">
+                    <div class="chart-label">
+                        <span>Redução leve</span>
+                        <span>30%</span>
+                    </div>
+                    <div class="chart-bar">
+                        <div class="chart-fill" style="background: linear-gradient(90deg, var(--accent), var(--secondary));" data-width="30"></div>
+                    </div>
+                </div>
+                
+                <div class="chart-explanation">
+                    <p><strong>Impacto:</strong> A maioria das famílias com desempregados relata redução significativa na qualidade da alimentação, com consequências diretas para a saúde e bem-estar.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="solucoes" class="fade-in">
+        <h2 class="section-title">Soluções Propostas</h2>
+        <div class="floating-cards">
+            <div class="floating-card">
+                <div class="card-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3 class="card-title">Proteção Social</h3>
+                <p class="card-content">Ampliação de programas de transferência de renda, seguro-desemprego e auxílio alimentação para famílias em situação de vulnerabilidade.</p>
+            </div>
+            
+            <div class="floating-card">
+                <div class="card-icon">
+                    <i class="fas fa-briefcase"></i>
+                </div>
+                <h3 class="card-title">Geração de Emprego</h3>
+                <p class="card-content">Incentivos fiscais para empresas que contratem pessoas em situação de vulnerabilidade e programas de obras públicas.</p>
+            </div>
+            
+            <div class="floating-card">
+                <div class="card-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h3 class="card-title">Capacitação</h3>
+                <p class="card-content">Programas de educação e qualificação profissional para preparar trabalhadores para as demandas do mercado atual.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção de Chamada para Ação -->
+    <div class="cta-section fade-in">
+        <h2 class="cta-title">Faça Parte da Solução</h2>
+        <p class="cta-text">Agora que você compreende a gravidade da situação, junte-se a nós para conectar pessoas em situação de vulnerabilidade a oportunidades reais de trabalho.</p>
+        
+        <!-- BOTÃO ATUALIZADO COM A NOVA URL -->
+        <a href="https://bernadogit.github.io/bernardogit.github.io/" class="botao" target="_blank">
+            <i class="fas fa-hands-helping"></i> Acessar Plataforma de Cadastro
+        </a>
+    </div>
+    
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Sobre este Projeto</h3>
+                <p>Uma iniciativa para conscientizar sobre a relação entre desemprego e fome, apresentando dados reais e soluções viáveis.</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Fontes de Pesquisa</h3>
+                <p>IBGE, FAO, ONU, OIT e outras organizações internacionais que estudam desemprego e segurança alimentar.</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Contato</h3>
+                <p>Email: contato@desempregoefome.org</p>
+                <p>Telefone: (11) 99999-9999</p>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2023 - Desemprego & Fome: Conexão Direta. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Criar partículas animadas
+        function createParticles() {
+            const container = document.getElementById('particles-container');
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Tamanho aleatório
+                const size = Math.random() * 5 + 2;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Posição inicial aleatória
+                particle.style.left = `${Math.random() * 100}vw`;
+                particle.style.top = `${Math.random() * 100}vh`;
+                
+                // Atraso de animação aleatório
+                particle.style.animationDelay = `${Math.random() * 15}s`;
+                
+                container.appendChild(particle);
+            }
+        }
+
+        // Animação das barras dos gráficos
+        function animateCharts() {
+            const chartFills = document.querySelectorAll('.chart-fill');
+            
+            chartFills.forEach(fill => {
+                const width = fill.getAttribute('data-width');
+                fill.style.width = `${width}%`;
+            });
+        }
+
+        // Observador de interseção para animações
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                }
+            });
+        }, observerOptions);
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+            
+            // Observar seções para animação
+            document.querySelectorAll('section, .cta-section').forEach(section => {
+                observer.observe(section);
+            });
+            
+            // Animar gráficos após um breve delay
+            setTimeout(animateCharts, 500);
+            
+            // Navegação suave
+            document.querySelectorAll('nav a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Atualizar link ativo
+                    document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const targetId = this.getAttribute('href');
+                    const targetSection = document.querySelector(targetId);
+                    
+                    window.scrollTo({
+                        top: targetSection.offsetTop - 20,
+                        behavior: 'smooth'
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
